@@ -13,7 +13,14 @@ pub struct Config {
 }
 
 pub fn run(config: Config) -> MyResult<()> {
-    println!("{:#?}", config);
+    for filename in config.files {
+        match open(&filename) {
+            Err(e) => eprintln!("{}: {}", filename, e),
+            Ok(_) => {
+                println!("open file{}", filename);
+            }
+        }
+    }
     Ok(())
 }
 
