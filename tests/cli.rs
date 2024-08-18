@@ -6,7 +6,7 @@ use rand::{distributions::Alphanumeric, Rng};
 use std::fs::{self, File};
 use std::io::prelude::*;
 
-const PRG: &str = "headr";
+const PRG: &str = "headson";
 const EMPTY: &str = "./tests/inputs/empty.txt";
 const ONE: &str = "./tests/inputs/one.txt";
 const TWO: &str = "./tests/inputs/two.txt";
@@ -111,11 +111,7 @@ fn run(args: &[&str], expected_file: &str) -> Result<()> {
 }
 
 // --------------------------------------------------
-fn run_stdin(
-    args: &[&str],
-    input_file: &str,
-    expected_file: &str,
-) -> Result<()> {
+fn run_stdin(args: &[&str], input_file: &str, expected_file: &str) -> Result<()> {
     // Extra work here due to lossy UTF
     let mut file = File::open(expected_file)?;
     let mut buffer = Vec::new();
