@@ -13,17 +13,60 @@ pub struct Config {
 }
 
 pub fn run(config: Config) -> MyResult<()> {
-    for filename in config.files {
-        match open(&filename) {
-            Err(e) => eprintln!("{}: {}", filename, e),
-            Ok(file) => {
-                for line in file.lines().take(config.lines as usize) {
-                    println!("{}", line?);
+    let num_files = config.files.len();
+
+    for (file_num, filename) in config.files.iter().enumerate() {
+        match open(filename) {
+            Err(err) => eprintln!("{filename}: {err}"),
+            Ok(mut file) => {
+                if num_files > 1 {
+                    println!("{}==> {filename} <==", if file_num > 0 { "\n" } else { "" },);
+                }
+
+                if let Some(num_bytes) = config.bytes {
+                    let mut buffer = vec![0; num_bytes as usize];
+                    let bytes_read = file.read(&mut buffer)?;
+                    print!("{}", String::from_utf8_lossy(&buffer[..bytes_read]));
+                } else {
+                    let mut line = String::new();
+                    for _ in 0..config.lines {
+                        let bytes = file.read_line(&mut line)?;
+                        if bytes == 0 {
+                            break;
+                        }
+                        print!("{line}");
+                        line.clear();
+                    }
                 }
             }
         }
     }
+
     Ok(())
+    // for filename in &config.files {
+    //     match open(filename) {
+    //         Err(e) => eprintln!("{}: {}", filename, e),
+    //         Ok(mut file) => {
+    //             if config.files.len() > 1 {
+    //                 println!(
+    //                     "{}==> {filename} <==",
+    //                     if config.files.len() > 0 { "\n" } else { "" },
+    //                 );
+    //                 // println!("==> {} <==", filename);
+    //             }
+    //             let mut line = String::new();
+    //             for _ in 0..config.lines {
+    //                 let bytes = file.read_line(&mut line)?;
+    //                 if bytes == 0 {
+    //                     break;
+    //                 }
+    //                 print!("{}", line);
+    //                 line.clear();
+    //             }
+    //         }
+    //     }
+    // }
+    // Ok(())
 }
 
 pub fn get_args() -> MyResult<Config> {
