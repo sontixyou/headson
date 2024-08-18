@@ -17,7 +17,7 @@ pub fn run(config: Config) -> MyResult<()> {
         match open(&filename) {
             Err(e) => eprintln!("{}: {}", filename, e),
             Ok(_) => {
-                println!("open file{}", filename);
+                println!("===> {} <===", filename);
             }
         }
     }
