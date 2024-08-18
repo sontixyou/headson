@@ -16,8 +16,10 @@ pub fn run(config: Config) -> MyResult<()> {
     for filename in config.files {
         match open(&filename) {
             Err(e) => eprintln!("{}: {}", filename, e),
-            Ok(_) => {
-                println!("===> {} <===", filename);
+            Ok(file) => {
+                for line in file.lines().take(config.lines as usize) {
+                    println!("{}", line?);
+                }
             }
         }
     }
