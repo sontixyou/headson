@@ -1,4 +1,4 @@
-use clap::{Arg, ArgAction, ArgMatches, Command};
+use clap::{Arg, ArgMatches, Command};
 use std::error::Error;
 
 type MyResult<T> = Result<T, Box<dyn Error>>;
@@ -6,8 +6,8 @@ type MyResult<T> = Result<T, Box<dyn Error>>;
 #[derive(Debug)]
 pub struct Config {
     pub files: Vec<String>,
-    pub lines: usize,
-    pub bytes: Option<usize>,
+    pub lines: u64,
+    pub bytes: Option<u64>,
 }
 
 pub fn run(config: Config) -> MyResult<()> {
@@ -30,15 +30,20 @@ pub fn get_args() -> MyResult<Config> {
         .arg(
             Arg::new("lines")
                 .short('n')
+                .long("lines")
                 .value_name("LINES")
-                .help("print the first K lines insterd of the first 10")
+                .help("Number of lines")
+                .value_parser(clap::value_parser!(u64).range(1..))
                 .default_value("10"),
         )
         .arg(
             Arg::new("bytes")
                 .short('c')
+                .long("bytes")
                 .value_name("BYTES")
-                .help("print the first K bytes of each file"),
+                .conflicts_with("lines")
+                .value_parser(clap::value_parser!(u64).range(1..))
+                .help("Number of bytes"),
         )
         .get_matches();
 
@@ -48,7 +53,7 @@ pub fn get_args() -> MyResult<Config> {
             .unwrap()
             .map(|s| s.to_string())
             .collect(),
-        lines: ,
-        bytes,
+        lines: cli.get_one("lines").cloned().unwrap(),
+        bytes: cli.get_one("bytes").cloned(),
     })
 }
