@@ -41,32 +41,7 @@ pub fn run(config: Config) -> MyResult<()> {
             }
         }
     }
-
     Ok(())
-    // for filename in &config.files {
-    //     match open(filename) {
-    //         Err(e) => eprintln!("{}: {}", filename, e),
-    //         Ok(mut file) => {
-    //             if config.files.len() > 1 {
-    //                 println!(
-    //                     "{}==> {filename} <==",
-    //                     if config.files.len() > 0 { "\n" } else { "" },
-    //                 );
-    //                 // println!("==> {} <==", filename);
-    //             }
-    //             let mut line = String::new();
-    //             for _ in 0..config.lines {
-    //                 let bytes = file.read_line(&mut line)?;
-    //                 if bytes == 0 {
-    //                     break;
-    //                 }
-    //                 print!("{}", line);
-    //                 line.clear();
-    //             }
-    //         }
-    //     }
-    // }
-    // Ok(())
 }
 
 pub fn get_args() -> MyResult<Config> {
